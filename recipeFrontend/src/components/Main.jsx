@@ -1,7 +1,6 @@
 import { useState } from "react"
 import IngridentList from './IngridentList.jsx'
 import Recipe from './Recipe.jsx'
-import {getRecipe} from '../gemini.js'
 
 
 function Main(){
@@ -19,6 +18,7 @@ function Main(){
 
     // state to save the recipe from Gemini
     const [recipeStore, setRecipeStore]=useState(false)
+    const API_URL = import.meta.env.VITE_API_URL;
 
 
 const getRecipeGemini = async () => {
@@ -27,7 +27,7 @@ const getRecipeGemini = async () => {
 
     try {
         const response = await fetch(
-            "http://localhost:3000/api/chat",
+            `${API_URL}`,
             {
                 method: "POST",
                 headers: {
