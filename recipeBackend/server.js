@@ -9,14 +9,12 @@ app.use(express.json());
 
 
 
-app.post("/", async (req, res) => {
-    console.time("recipe");
-
+app.post("/api/chat", async (req, res) => {
+    console.log("Request received");
+    console.log(req.body);
     try {
         const { ingredients } = req.body;
-
         const generatedRecipe = await getRecipe(ingredients);
-        console.timeEnd("recipe");
 
 
         res.json(generatedRecipe);
@@ -27,5 +25,4 @@ app.post("/", async (req, res) => {
         });
     }
 });
-
 module.exports = app;
