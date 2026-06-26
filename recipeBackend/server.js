@@ -8,26 +8,24 @@ app.use(cors());
 app.use(express.json());
 
 
-app.get("/", (req, res) => {
-  res.send("Backend Working");
+
+app.post("/", async (req, res) => {
+    console.time("recipe");
+
+    try {
+        const { ingredients } = req.body;
+
+        const generatedRecipe = await getRecipe(ingredients);
+        console.timeEnd("recipe");
+
+
+        res.json(generatedRecipe);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            error: "Server error"
+        });
+    }
 });
 
-// app.post("/", async (req, res) => {
-//     console.time("recipe");
-//
-//     try {
-//         const { ingredients } = req.body;
-//
-//         const generatedRecipe = await getRecipe(ingredients);
-//         console.timeEnd("recipe");
-//
-//
-//         res.json(generatedRecipe);
-//     } catch (error) {
-//         console.error(error);
-//         res.status(500).json({
-//             error: "Server error"
-//         });
-//     }
-// });
 module.exports = app;
