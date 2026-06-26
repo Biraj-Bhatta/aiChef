@@ -9,7 +9,7 @@ function Main(){
     function addIngrident(formData){
         const newIngrident=formData.get("ingrident")
         if (newIngrident !=""){
-        setIngridents( prevIngridents => [ ...prevIngridents, newIngrident ] )
+            setIngridents( prevIngridents => [ ...prevIngridents, newIngrident ] )
         }
     }
 
@@ -18,47 +18,46 @@ function Main(){
 
     // state to save the recipe from Gemini
     const [recipeStore, setRecipeStore]=useState(false)
+
+
     const API_URL = import.meta.env.VITE_API_URL;
 
+    const getRecipeGemini = async () => {
+        setIsLoading(true);
+        setRecipeStore(null);
+        try {
+            const response = await fetch(
+                `${API_URL}`,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        ingredients: ingridents
+                    })
+                }
+            );
 
-const getRecipeGemini = async () => {
-    setIsLoading(true);
-    setRecipeStore(null);
-
-    try {
-        const response = await fetch(
-            `${API_URL}`,
-            {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    ingredients: ingridents
-                })
+            if (!response.ok) {
+                throw new Error("Server error");
             }
-        );
 
-        if (!response.ok) {
-            throw new Error("Server error");
+            const generatedRecipe = await response.json();
+            setRecipeStore(generatedRecipe);
+
+        } catch (error) {
+            console.error(error);
+            alert("Failed to generate recipe");
+        } finally {
+            setIsLoading(false);
         }
-
-        const generatedRecipe = await response.json();
-
-        setRecipeStore(generatedRecipe);
-
-    } catch (error) {
-        console.error(error);
-        alert("Failed to generate recipe");
-    } finally {
-        setIsLoading(false);
-    }
-};
+    };
 
     //This Part is for calling the API from frontend 
     // Note:Don't call api from frontend can be seen in header in console easily 
     // always make a backend for it.
-    
+
 
 
     // //Fuction handles the response 
